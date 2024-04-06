@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34408.163
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DoYourself.Core", "DoYourself.Core\DoYourself.Core.csproj", "{3108C3FA-20B3-4540-963D-8EE5387F95B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoYourself.API", "DoYourself.API\DoYourself.API.csproj", "{A44997E0-EEFB-40C7-ACF3-75343B4FDB27}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3108C3FA-20B3-4540-963D-8EE5387F95B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3108C3FA-20B3-4540-963D-8EE5387F95B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3108C3FA-20B3-4540-963D-8EE5387F95B1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3108C3FA-20B3-4540-963D-8EE5387F95B1}.Debug|x64.Build.0 = Debug|Any CPU
+		{3108C3FA-20B3-4540-963D-8EE5387F95B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3108C3FA-20B3-4540-963D-8EE5387F95B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3108C3FA-20B3-4540-963D-8EE5387F95B1}.Release|x64.ActiveCfg = Release|Any CPU
+		{3108C3FA-20B3-4540-963D-8EE5387F95B1}.Release|x64.Build.0 = Release|Any CPU
+		{A44997E0-EEFB-40C7-ACF3-75343B4FDB27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A44997E0-EEFB-40C7-ACF3-75343B4FDB27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A44997E0-EEFB-40C7-ACF3-75343B4FDB27}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A44997E0-EEFB-40C7-ACF3-75343B4FDB27}.Debug|x64.Build.0 = Debug|Any CPU
+		{A44997E0-EEFB-40C7-ACF3-75343B4FDB27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A44997E0-EEFB-40C7-ACF3-75343B4FDB27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A44997E0-EEFB-40C7-ACF3-75343B4FDB27}.Release|x64.ActiveCfg = Release|Any CPU
+		{A44997E0-EEFB-40C7-ACF3-75343B4FDB27}.Release|x64.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2CEE83AD-0604-4E06-934F-9F724594B2B9}
+	EndGlobalSection
+EndGlobal
