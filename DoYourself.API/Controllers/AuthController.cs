@@ -53,13 +53,16 @@ namespace DoYourself.API.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login(string username, string password)
+        public IActionResult Login(string email, string password)
         {
-            // Проверка логина и пароля (ваша логика)
-
+            var user = _dbContext.Users.FirstOrDefault(u => u.Email == email);
+            if (user == null || user.Password != password)
+            {
+                return BadRequest("Неверный логин или пароль");
+            }
             // Если логин и пароль верны, генерируем токен
-            var token = GenerateToken(username);
-            return Ok(new { token });
+            var token = GenerateToken(email);
+            return Ok(new { token, message = "Токен успешно создан" });
         }
 
         private string GenerateToken(string username)
