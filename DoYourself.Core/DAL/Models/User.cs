@@ -5,7 +5,7 @@ namespace DoYourself.Core.DAL.Models
     public class User : IUser
     {
         public User() { }
-        public User(string name, string surname, string nickname, DateOnly birthdate, string picture, int points, int experience, string email, string password ) 
+        public User(string name, string surname, string nickname, string birthdate, string picture, int points, int experience, string email, string password ) 
         { 
             Id = Guid.NewGuid();
             Name = name;
@@ -23,7 +23,7 @@ namespace DoYourself.Core.DAL.Models
         public string Name { get; set;}
         public string Surname { get; set;}
         public string Nickname { get; set;}
-        public DateOnly BirthDate { get; set;}
+        public string BirthDate { get; set;}
         public string Picture { get; set;}
         public int Points { get; set;}
         public int Experience { get; set;}

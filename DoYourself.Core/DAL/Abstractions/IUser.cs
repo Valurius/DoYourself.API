@@ -12,7 +12,7 @@ namespace DoYourself.Core.DAL.Abstractions
         public string Name { get; }
         public string Surname { get; }
         public string Nickname { get; }
-        public DateOnly BirthDate { get; }
+        public string BirthDate { get; }
         public string Picture { get; }
         public int Points { get; }
         public int Experience { get; }

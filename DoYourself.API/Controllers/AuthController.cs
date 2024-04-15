@@ -23,26 +23,25 @@ namespace DoYourself.API.Controllers
         }
 
         [HttpPost("Register")]
-        public IActionResult RegisterUser([FromBody] User model)
+        public IActionResult RegisterUser([FromForm] string name, [FromForm] string email, [FromForm] string password)
         {
-            if (model == null)
+            if (name == null || email == null || password == null)
             {
                 return BadRequest("Неверные данные пользователя.");
             }
 
-            // Создание нового пользователя (псевдокод)
+            // Создание нового пользователя
             var newUser = new User
             {
-                Id = model.Id,
-                Name = model.Name,
-                Surname = model.Surname,
-                Nickname = model.Nickname,
-                BirthDate = model.BirthDate,
-                Picture = model.Picture,
-                Points = model.Points,
-                Experience = model.Experience,
-                Email = model.Email,
-                Password = model.Password,
+                Name = name,
+                Surname = "",
+                Nickname = "",
+                Picture = "",
+                BirthDate = "",
+                Points = 0,
+                Experience = 0,
+                Email = email,
+                Password = password,
         };
 
             // Сохранение пользователя в базе данных (псевдокод)
@@ -53,7 +52,7 @@ namespace DoYourself.API.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login(string email, string password)
+        public IActionResult Login([FromForm] string email, [FromForm] string password)
         {
             var user = _dbContext.Users.FirstOrDefault(u => u.Email == email);
             if (user == null || user.Password != password)
