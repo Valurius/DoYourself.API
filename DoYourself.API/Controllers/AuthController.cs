@@ -1,10 +1,7 @@
 ﻿using DoYourself.Core.DAL;
 using DoYourself.Core.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using DoYourself.API.Auth;
 
 namespace DoYourself.API.Controllers
 {
@@ -13,7 +10,6 @@ namespace DoYourself.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly ApplicationDbContext _dbContext;
-        private readonly string _key = "mysupersecret_secretsecretsecretkey!123";
 
         public AuthController(ApplicationDbContext dbContext)
         {
@@ -45,30 +41,10 @@ namespace DoYourself.API.Controllers
                 return BadRequest("Неверный логин или пароль");
             }
             
-            var token = GenerateToken(email);
+            var token = GenerateToken.GenerateTokens(email);
             return Ok(new { token, message = "Токен успешно создан" });
         }
 
-        private string GenerateToken(string username)
-        {
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Name, username),
-                // Другие необходимые claims (например, роли пользователя)
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                issuer: "your-issuer",
-                audience: "your-audience",
-                claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(30), // Время жизни токена
-                signingCredentials: creds
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
+        
     }
 }
