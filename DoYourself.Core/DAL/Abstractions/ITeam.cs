@@ -10,7 +10,7 @@ namespace DoYourself.Core.DAL.Abstractions
     {
         public Guid Id { get; }
         public string Title { get; }
-        public string Description { get; }
-        public string Image { get; }
+        public string? Description { get; }
+        public string? Image { get; }
     }
 }
