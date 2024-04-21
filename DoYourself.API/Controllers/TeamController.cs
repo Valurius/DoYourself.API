@@ -11,9 +11,14 @@ namespace DoYourself.API.Controllers
     public class TeamController : ControllerBase
     {
         private readonly ApplicationDbContext _dbContext;
-        
+
+        public TeamController(ApplicationDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
         // GET: api/Team
-        [HttpGet]
+        [HttpGet()]
         public ActionResult GetTeams()
         {
             var teams = _dbContext.Teams.ToList();
@@ -26,7 +31,7 @@ namespace DoYourself.API.Controllers
 
         // GET: api/Team/5
         [HttpGet("{id}")]
-        public ActionResult<Team> GetTeamById(int id)
+        public ActionResult<Team> GetTeamById(Guid id)
         {
             var team = _dbContext.Teams.Find(id);
             if (team == null)
@@ -62,14 +67,41 @@ namespace DoYourself.API.Controllers
 
         // PUT: api/Team/5
         [HttpPut("{id}")]
-        public IActionResult UpdateTeam(int id, [FromBody] Team team)
+        public IActionResult UpdateTeam(Guid id, [FromForm] string title, [FromForm] string? desc, [FromForm] string? image)
         {
-            return Ok();
+            var teamToUpdate = _dbContext.Teams.FirstOrDefault(t => t.Id == id);
+            if (teamToUpdate == null)
+            {
+                return NotFound($"Команда с ID {id} не найдена.");
+            }
+
+            teamToUpdate.Title = title;
+            teamToUpdate.Description = desc;
+            teamToUpdate.Image = image;
+
+            _dbContext.Entry(teamToUpdate).State = EntityState.Modified;
+            try
+            {
+                _dbContext.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_dbContext.Teams.Any(t => t.Id == id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
         // DELETE: api/Team/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteTeam(int id)
+        public IActionResult DeleteTeam(Guid id)
         {
             var team = _dbContext.Teams.Find(id);
             if (team == null)
