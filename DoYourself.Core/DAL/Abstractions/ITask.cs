@@ -9,14 +9,15 @@ namespace DoYourself.Core.DAL.Abstractions
     public interface ITask
     {
         public Guid Id { get; }
-        public Guid UserId { get; }
+        public Guid? UserId { get; }
         public string Title { get; }
         public string Description { get; }
-        public string Picture { get; }
-        public string Status { get; }
+        public string? Picture { get; }
+        public string? Status { get; }
         public bool IsTemporary { get; }
-        public DateOnly CreatedAt { get; }
-        public DateTime DoneAt { get; }
-        public string Results { get; }
+        public DateTime? CreatedAt { get; }
+        public DateOnly NeedToBeDoneAt { get; }
+        public DateTime? DoneAt { get; }
+        public string? Results { get; }
     }
 }

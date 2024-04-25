@@ -43,31 +43,31 @@ namespace DoYourself.API.Controllers
 
         // POST: api/Team
         [HttpPost]
-        public IActionResult CreateTeam([FromForm] string title)
+        public IActionResult CreateTeam([FromBody] Team teamModel)
         {
-            if (title == null)
+            if (teamModel.Title == null)
             {
                 return BadRequest("Данные предоставлены некорректно");
             }
 
             // Проверка на уникальность имени команды
-            var existingTeam = _dbContext.Teams.FirstOrDefault(t => t.Title == title);
+            var existingTeam = _dbContext.Teams.FirstOrDefault(t => t.Title == teamModel.Title);
             if (existingTeam != null)
             {
-                return Conflict($"Команда с именем {title} уже существует.");
+                return Conflict($"Команда с именем {teamModel.Title} уже существует.");
             }
-            var newTeam = new Core.DAL.Models.Team(title);
+            var newTeam = new Team(teamModel.Title);
             // Добавление команды в базу данных
             _dbContext.Teams.Add(newTeam);
             _dbContext.SaveChanges();
 
             // Возвращение созданной команды с статусом 201 (Created)
-            return Ok("Команда успешно создана!");
+            return Ok();
         }
 
         // PUT: api/Team/5
         [HttpPut("{id}")]
-        public IActionResult UpdateTeam(Guid id, [FromForm] string title, [FromForm] string? desc, [FromForm] string? image)
+        public IActionResult UpdateTeam(Guid id, [FromBody] Team teamModel)
         {
             var teamToUpdate = _dbContext.Teams.FirstOrDefault(t => t.Id == id);
             if (teamToUpdate == null)
@@ -75,9 +75,9 @@ namespace DoYourself.API.Controllers
                 return NotFound($"Команда с ID {id} не найдена.");
             }
 
-            teamToUpdate.Title = title;
-            teamToUpdate.Description = desc;
-            teamToUpdate.Image = image;
+            teamToUpdate.Title = teamModel.Title;
+            teamToUpdate.Description = teamModel.Description;
+            teamToUpdate.Image = teamModel.Image;
 
             _dbContext.Entry(teamToUpdate).State = EntityState.Modified;
             try
@@ -116,10 +116,4 @@ namespace DoYourself.API.Controllers
         }
     }
 
-    public class Team
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public List<string> Members { get; set; }
-    }
 }
