@@ -1,20 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DoYourself.Core.DAL.Abstractions
+﻿namespace DoYourself.Core.DAL.Abstractions
 {
     public interface IProject
     {
         public Guid Id { get; }
         public Guid TeamId { get; }
-        public string Name { get; }
-        public DateTime Deadline { get; }
-        public DateTime Actual { get; }
-        public int TasksAmount { get; }
-        public int TasksDone { get; }
+        public string Title { get; }
+        public string Goal {  get; }
+        public string Description { get; }
+        public int Budget { get; }
+        public string Priority { get; }
+        public DateOnly Deadline { get; }
+        public DateOnly? Actual { get; }
+        public int? TasksAmount { get; }
+        public int? TasksDone { get; }
     }
     
 }

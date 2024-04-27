@@ -49,7 +49,7 @@ namespace DoYourself.API.Controllers
                 return BadRequest("Данные предоставлены некорректно");
             }
 
-            var newTask = new Core.DAL.Models.Task( taskModel.Title, taskModel.Description, taskModel.IsTemporary, taskModel.NeedToBeDoneAt);
+            var newTask = new Core.DAL.Models.Task( taskModel.Title, taskModel.Description, taskModel.Priority, taskModel.IsTemporary, taskModel.NeedToBeDoneAt);
             // Добавление команды в базу данных
             _dbContext.Tasks.Add(newTask);
             _dbContext.SaveChanges();
