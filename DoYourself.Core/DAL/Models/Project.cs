@@ -5,10 +5,11 @@ namespace DoYourself.Core.DAL.Models
     public class Project: IProject
     {
         public Project() { }
-        public Project(string teamId, string title, string goal, string description,int budget,string priority, DateOnly deadline)   
+        public Project(string teamId,string image, string title, string goal, string description,int budget,string priority, DateOnly deadline)   
         {
             Id = Guid.NewGuid();
             TeamId = Guid.Parse(teamId);
+            Image = image;
             Title = title;
             Goal = goal;
             Description = description;
@@ -19,6 +20,7 @@ namespace DoYourself.Core.DAL.Models
         public Guid Id { get; set; }
         public Guid TeamId { get; set; }
         public string Title { get; set; }
+        public string Image { get; set; }
         public string Goal { get; set; }
         public string Description { get; set; }
         public int Budget { get; set; }

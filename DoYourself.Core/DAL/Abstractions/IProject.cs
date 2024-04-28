@@ -5,6 +5,7 @@
         public Guid Id { get; }
         public Guid TeamId { get; }
         public string Title { get; }
+        public string Image { get;  }
         public string Goal {  get; }
         public string Description { get; }
         public int Budget { get; }

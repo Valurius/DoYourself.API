@@ -47,7 +47,7 @@ namespace DoYourself.API.Controllers
                 return BadRequest("Данные предоставлены некорректно");
             }
 
-            var newProject = new Project(projectModel.TeamId.ToString(), projectModel.Title, projectModel.Goal, projectModel.Description, projectModel.Budget, projectModel.Priority, projectModel.Deadline);
+            var newProject = new Project(projectModel.TeamId.ToString(), projectModel.Image, projectModel.Title, projectModel.Goal, projectModel.Description, projectModel.Budget, projectModel.Priority, projectModel.Deadline);
             
             _dbContext.Projects.Add(newProject);
             _dbContext.SaveChanges();
