@@ -11,7 +11,7 @@
         public string? Status { get; }
         public bool IsTemporary { get; }
         public DateOnly? CreatedAt { get; }
-        public DateOnly NeedToBeDoneAt { get; }
+        public DateOnly Deadline { get; }
         public DateOnly? DoneAt { get; }
         public string? Results { get; }
     }
