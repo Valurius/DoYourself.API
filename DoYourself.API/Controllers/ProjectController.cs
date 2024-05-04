@@ -56,9 +56,9 @@ namespace DoYourself.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateProject(Guid id, [FromBody] Team projectModel)
+        public IActionResult UpdateProject(Guid id, [FromBody] Project projectModel)
         {
-            var projectToUpdate = _dbContext.Teams.FirstOrDefault(t => t.Id == id);
+            var projectToUpdate = _dbContext.Projects.FirstOrDefault(t => t.Id == id);
             if (projectToUpdate == null)
             {
                 return NotFound($"Задача с ID {id} не найдена.");
@@ -66,8 +66,9 @@ namespace DoYourself.API.Controllers
 
             projectToUpdate.Title = projectModel.Title;
             projectToUpdate.Description = projectModel.Description;
-            projectToUpdate.Image = projectModel.Image;
-
+            projectToUpdate.Goal = projectModel.Goal;
+            projectToUpdate.Budget = projectModel.Budget;
+            projectToUpdate.Priority = projectModel.Priority;
             _dbContext.Entry(projectToUpdate).State = EntityState.Modified;
             try
             {
@@ -75,7 +76,7 @@ namespace DoYourself.API.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_dbContext.Teams.Any(t => t.Id == id))
+                if (!_dbContext.Projects.Any(t => t.Id == id))
                 {
                     return NotFound();
                 }
@@ -85,7 +86,8 @@ namespace DoYourself.API.Controllers
                 }
             }
 
-            return NoContent();
+            // Вместо NoContent(), возвращаем Ok() с обновленными данными
+            return Ok(projectToUpdate);
         }
 
         [HttpDelete("{id}")]

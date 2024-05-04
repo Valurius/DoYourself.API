@@ -62,7 +62,7 @@ namespace DoYourself.API.Controllers
             _dbContext.SaveChanges();
 
             // Возвращение созданной команды с статусом 201 (Created)
-            return Ok();
+            return Ok(new { id = newTeam.Id });
         }
 
         // PUT: api/Team/5

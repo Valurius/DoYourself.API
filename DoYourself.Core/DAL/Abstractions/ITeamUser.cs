@@ -7,6 +7,6 @@
         public Guid UserId { get; }
         public Guid RoleId { get; }
         public int Score { get; }
-        public int Expirience { get; }
+        public int Experience { get; }
     }
 }

@@ -31,12 +31,12 @@ namespace DoYourself.API.Controllers
 
         // GET: api/Team/5
         [HttpGet("{id}")]
-        public ActionResult<Team> GetTaskById(Guid id)
+        public ActionResult<IEnumerable<Core.DAL.Models.Task>> GetTasksByProjectId(Guid id)
         {
-            var tasks = _dbContext.Tasks.Find(id);
-            if (tasks == null)
+            var tasks = _dbContext.Tasks.Where(t => t.ProjectId == id).ToList();
+            if (tasks.Count == 0)
             {
-                return NotFound($"Задача с ID {id} не найдена.");
+                return NotFound($"Задачи с ProjectId {id} не найдены.");
             }
             return Ok(tasks);
         }
@@ -49,7 +49,7 @@ namespace DoYourself.API.Controllers
                 return BadRequest("Данные предоставлены некорректно");
             }
 
-            var newTask = new Core.DAL.Models.Task( taskModel.Title, taskModel.Description, taskModel.Priority, taskModel.IsTemporary, taskModel.Deadline);
+            var newTask = new Core.DAL.Models.Task(taskModel.ProjectId, taskModel.Title, taskModel.Description, taskModel.Priority, taskModel.IsTemporary, taskModel.Deadline);
             // Добавление команды в базу данных
             _dbContext.Tasks.Add(newTask);
             _dbContext.SaveChanges();
@@ -61,7 +61,7 @@ namespace DoYourself.API.Controllers
         [HttpPut("{id}")]
         public IActionResult UpdateTask(Guid id, [FromBody] Team taskModel)
         {
-            var taskToUpdate = _dbContext.Teams.FirstOrDefault(t => t.Id == id);
+            var taskToUpdate = _dbContext.Tasks.FirstOrDefault(t => t.Id == id);
             if (taskToUpdate == null)
             {
                 return NotFound($"Задача с ID {id} не найдена.");
@@ -69,7 +69,7 @@ namespace DoYourself.API.Controllers
 
             taskToUpdate.Title = taskModel.Title;
             taskToUpdate.Description = taskModel.Description;
-            taskToUpdate.Image = taskModel.Image;
+            
 
             _dbContext.Entry(taskToUpdate).State = EntityState.Modified;
             try

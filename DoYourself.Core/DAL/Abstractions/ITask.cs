@@ -4,10 +4,10 @@
     {
         public Guid Id { get; }
         public Guid? UserId { get; }
+        public Guid? ProjectId { get; }
         public string Title { get; }
         public string Description { get; }
         public string Priority { get; }
-        public string? Picture { get; }
         public string? Status { get; }
         public bool IsTemporary { get; }
         public DateOnly? CreatedAt { get; }
