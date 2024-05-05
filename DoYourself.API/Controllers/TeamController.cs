@@ -19,7 +19,7 @@ namespace DoYourself.API.Controllers
 
         // GET: api/Team
         [HttpGet()]
-        public ActionResult GetTeams()
+        public async Task<IActionResult> GetTeams()
         {
             var teams = _dbContext.Teams.ToList();
             if (teams == null || !teams.Any())
@@ -31,7 +31,7 @@ namespace DoYourself.API.Controllers
 
         // GET: api/Team/5
         [HttpGet("{id}")]
-        public ActionResult<Team> GetTeamById(Guid id)
+        public async Task<IActionResult> GetTeamById(Guid id)
         {
             var team = _dbContext.Teams.Find(id);
             if (team == null)
@@ -43,7 +43,7 @@ namespace DoYourself.API.Controllers
 
         // POST: api/Team
         [HttpPost]
-        public IActionResult CreateTeam([FromBody] Team teamModel)
+        public async Task<IActionResult> CreateTeam([FromBody] Team teamModel)
         {
             if (teamModel.Title == null)
             {
@@ -67,7 +67,7 @@ namespace DoYourself.API.Controllers
 
         // PUT: api/Team/5
         [HttpPut("{id}")]
-        public IActionResult UpdateTeam(Guid id, [FromBody] Team teamModel)
+        public async Task<IActionResult> UpdateTeam(Guid id, [FromBody] Team teamModel)
         {
             var teamToUpdate = _dbContext.Teams.FirstOrDefault(t => t.Id == id);
             if (teamToUpdate == null)
@@ -101,9 +101,9 @@ namespace DoYourself.API.Controllers
 
         // DELETE: api/Team/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteTeam(Guid id)
+        public async Task<IActionResult> DeleteTeam(Guid id)
         {
-            var team = _dbContext.Teams.Find(id);
+            var team = await _dbContext.Teams.FindAsync(id);
             if (team == null)
             {
                 return NotFound($"Команда с ID {id} не найдена.");

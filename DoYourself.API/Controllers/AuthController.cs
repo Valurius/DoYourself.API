@@ -17,7 +17,7 @@ namespace DoYourself.API.Controllers
         }
 
         [HttpPost("Register")]
-        public IActionResult RegisterUser([FromForm] string name, [FromForm] string email, [FromForm] string password)
+        public async Task<IActionResult> RegisterUser([FromForm] string name, [FromForm] string email, [FromForm] string password)
         {
             if (name == null || email == null || password == null)
             {
@@ -33,7 +33,7 @@ namespace DoYourself.API.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromForm] string email, [FromForm] string password)
+        public async Task<IActionResult> Login([FromForm] string email, [FromForm] string password)
         {
             var user = _dbContext.Users.FirstOrDefault(u => u.Email == email);           
             if (user == null || user.Password != Core.DAL.Models.User.HashPassword(password))
@@ -42,9 +42,8 @@ namespace DoYourself.API.Controllers
             }
             
             var token = GenerateToken.GenerateTokens(email);
-            return Ok(new { token, message = "Токен успешно создан" });
+            return Ok(new { token, userId = user.Id, message = "Токен успешно создан" });
         }
 
-        
     }
 }

@@ -18,20 +18,17 @@ namespace DoYourself.API.Controllers
         }
 
         [HttpGet()]
-        public ActionResult GetProjects()
+        public async Task<IActionResult> GetProjects()
         {
-            var projects = _dbContext.Projects.ToList();
-            if (projects == null || !projects.Any())
-            {
-                return Ok(new string[0]);
-            }
+            var projects = await _dbContext.Projects.ToListAsync();
+          
             return Ok(projects);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Team> GetProjectById(Guid id)
+        public async Task<IActionResult> GetProjectById(Guid id)
         {
-            var projects = _dbContext.Projects.Find(id);
+            var projects = await _dbContext.Projects.FindAsync(id);
             if (projects == null)
             {
                 return NotFound($"Проект с ID {id} не найден.");
@@ -40,7 +37,7 @@ namespace DoYourself.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateProject([FromBody] Project projectModel)
+        public async Task<IActionResult> CreateProject([FromBody] Project projectModel)
         {
             if (projectModel == null)
             {
@@ -48,17 +45,17 @@ namespace DoYourself.API.Controllers
             }
 
             var newProject = new Project(projectModel.TeamId.ToString(), projectModel.Image, projectModel.Title, projectModel.Goal, projectModel.Description, projectModel.Budget, projectModel.Priority, projectModel.Deadline);
-            
-            _dbContext.Projects.Add(newProject);
-            _dbContext.SaveChanges();
+
+            await _dbContext.Projects.AddAsync(newProject);
+            await _dbContext.SaveChangesAsync();
 
             return Ok();
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateProject(Guid id, [FromBody] Project projectModel)
+        public async Task<IActionResult> UpdateProject(Guid id, [FromBody] Project projectModel)
         {
-            var projectToUpdate = _dbContext.Projects.FirstOrDefault(t => t.Id == id);
+            var projectToUpdate = await _dbContext.Projects.FirstOrDefaultAsync(t => t.Id == id);
             if (projectToUpdate == null)
             {
                 return NotFound($"Задача с ID {id} не найдена.");
@@ -72,7 +69,7 @@ namespace DoYourself.API.Controllers
             _dbContext.Entry(projectToUpdate).State = EntityState.Modified;
             try
             {
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -86,14 +83,14 @@ namespace DoYourself.API.Controllers
                 }
             }
 
-            // Вместо NoContent(), возвращаем Ok() с обновленными данными
+            
             return Ok(projectToUpdate);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteProject(Guid id)
+        public async Task<IActionResult> DeleteProject(Guid id)
         {
-            var project = _dbContext.Projects.Find(id);
+            var project = await _dbContext.Projects.FindAsync(id);
             if (project == null)
             {
                 return NotFound($"Проект с ID {id} не найден.");
@@ -105,5 +102,4 @@ namespace DoYourself.API.Controllers
             return Ok($"Проект с ID {id} был удален.");
         }
     }
-
 }

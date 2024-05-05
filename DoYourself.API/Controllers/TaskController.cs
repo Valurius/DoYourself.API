@@ -17,23 +17,18 @@ namespace DoYourself.API.Controllers
             _dbContext = dbContext;
         }
 
-        // GET: api/Team
         [HttpGet()]
-        public ActionResult GetTasks()
+        public async Task<IActionResult> GetTasks()
         {
-            var tasks = _dbContext.Tasks.ToList();
-            if (tasks == null || !tasks.Any())
-            {
-                return Ok(new string[0]);
-            }
+            var tasks = await _dbContext.Tasks.ToListAsync();
+
             return Ok(tasks);
         }
 
-        // GET: api/Team/5
         [HttpGet("{id}")]
-        public ActionResult<IEnumerable<Core.DAL.Models.Task>> GetTasksByProjectId(Guid id)
+        public async Task<IActionResult> GetTasksByProjectId(Guid id)
         {
-            var tasks = _dbContext.Tasks.Where(t => t.ProjectId == id).ToList();
+            var tasks = await _dbContext.Tasks.Where(t => t.ProjectId == id).ToListAsync();
             if (tasks.Count == 0)
             {
                 return Ok(new string[0]);
@@ -42,7 +37,7 @@ namespace DoYourself.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateTask([FromBody] Core.DAL.Models.Task taskModel)
+        public async Task<IActionResult> CreateTask([FromBody] Core.DAL.Models.Task taskModel)
         {
             if (taskModel == null)
             {
@@ -51,17 +46,17 @@ namespace DoYourself.API.Controllers
 
             var newTask = new Core.DAL.Models.Task(taskModel.ProjectId, taskModel.Title, taskModel.Description, taskModel.Priority, taskModel.IsTemporary, taskModel.Deadline);
             // Добавление команды в базу данных
-            _dbContext.Tasks.Add(newTask);
-            _dbContext.SaveChanges();
+            await _dbContext.Tasks.AddAsync(newTask);
+            await _dbContext.SaveChangesAsync();
 
             // Возвращение созданной команды с статусом 201 (Created)
             return Ok();
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateTask(Guid id, [FromBody] Team taskModel)
+        public async Task<IActionResult> UpdateTask(Guid id, [FromBody] Team taskModel)
         {
-            var taskToUpdate = _dbContext.Tasks.FirstOrDefault(t => t.Id == id);
+            var taskToUpdate = await _dbContext.Tasks.FirstOrDefaultAsync(t => t.Id == id);
             if (taskToUpdate == null)
             {
                 return NotFound($"Задача с ID {id} не найдена.");
@@ -69,12 +64,12 @@ namespace DoYourself.API.Controllers
 
             taskToUpdate.Title = taskModel.Title;
             taskToUpdate.Description = taskModel.Description;
-            
+
 
             _dbContext.Entry(taskToUpdate).State = EntityState.Modified;
             try
             {
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -92,9 +87,9 @@ namespace DoYourself.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteTask(Guid id)
+        public async Task<IActionResult> DeleteTask(Guid id)
         {
-            var task = _dbContext.Tasks.Find(id);
+            var task = await _dbContext.Tasks.FindAsync(id);
             if (task == null)
             {
                 return NotFound($"Задача с ID {id} не найдена.");
