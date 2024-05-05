@@ -6,10 +6,17 @@ namespace DoYourself.Core.DAL
 {
     public class ApplicationDbContext : DbContext
     {
+
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
-
             Database.EnsureCreated();
+            if (!Users.Any(u => u.Email == "Admin@gmail.com"))
+            {
+                var newUser = new User("Admin@gmail.com", "1234");
+       
+                Users.Add(newUser);
+                SaveChanges();
+            }
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }

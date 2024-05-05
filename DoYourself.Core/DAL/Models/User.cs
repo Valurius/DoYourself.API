@@ -13,13 +13,21 @@ namespace DoYourself.Core.DAL.Models
             Id = Guid.NewGuid();
             Name = name;
             Email = email;
+            Permition = "Юзер";
             Password = HashPassword(password);
         }
-        
+        public User(string email, string password)
+        {
+            Id = Guid.NewGuid();
+            Email = email;
+            Permition = "Админ";
+            Password = HashPassword(password);
+        }
         public Guid Id { get; set; }
-        public string Name { get; set;}
+        public string? Name { get; set;}
         public string? Surname { get; set;}
         public string? Nickname { get; set;}
+        public string Permition { get; set;}
         public DateOnly? BirthDate { get; set;}
         public string? Picture { get; set;}
         public int? Points { get; set;}

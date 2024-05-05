@@ -24,7 +24,7 @@ namespace DoYourself.API.Controllers
             var tasks = _dbContext.Tasks.ToList();
             if (tasks == null || !tasks.Any())
             {
-                return NotFound("Задачи не найдены.");
+                return Ok(new string[0]);
             }
             return Ok(tasks);
         }
@@ -36,7 +36,7 @@ namespace DoYourself.API.Controllers
             var tasks = _dbContext.Tasks.Where(t => t.ProjectId == id).ToList();
             if (tasks.Count == 0)
             {
-                return NotFound($"Задачи с ProjectId {id} не найдены.");
+                return Ok(new string[0]);
             }
             return Ok(tasks);
         }

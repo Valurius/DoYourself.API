@@ -23,7 +23,7 @@ namespace DoYourself.API.Controllers
             var projects = _dbContext.Projects.ToList();
             if (projects == null || !projects.Any())
             {
-                return NotFound("Проекты не найдены.");
+                return Ok(new string[0]);
             }
             return Ok(projects);
         }
