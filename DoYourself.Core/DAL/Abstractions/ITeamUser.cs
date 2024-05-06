@@ -6,7 +6,7 @@
         public Guid TeamId { get; }
         public Guid UserId { get; }
         public Guid RoleId { get; }
-        public int Score { get; }
-        public int Experience { get; }
+        public int? Score { get; }
+        public int? Experience { get; }
     }
 }

@@ -6,18 +6,28 @@ namespace DoYourself.Core.DAL
 {
     public class ApplicationDbContext : DbContext
     {
-
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
             Database.EnsureCreated();
-            if (!Users.Any(u => u.Email == "Admin@gmail.com"))
+
+            if (Users.Count() == 0)
             {
                 var newUser = new User("Admin@gmail.com", "1234");
        
                 Users.Add(newUser);
                 SaveChanges();
             }
+
+            if (Roles.Count()==0) 
+            {
+                var newRoleHost = new Role("Владелец");
+                var newRoleMember = new Role("Участник");
+                Roles.Add(newRoleMember);
+                Roles.Add(newRoleHost);
+                SaveChanges();
+            }
         }
+
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Tag> Tags { get; set; }
@@ -32,10 +42,7 @@ namespace DoYourself.Core.DAL
         public DbSet<ProjectStatistic> ProjectStatistics { get; set; }
         public DbSet<ProjectTask> ProjectTasks { get; set; }
         public DbSet<Purchase> Purchases { get; set; }
-
-
     }
-
 }
 
  

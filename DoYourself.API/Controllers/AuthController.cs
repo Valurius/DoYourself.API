@@ -2,6 +2,7 @@
 using DoYourself.Core.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using DoYourself.API.Auth;
+using Microsoft.EntityFrameworkCore;
 
 namespace DoYourself.API.Controllers
 {
@@ -26,8 +27,8 @@ namespace DoYourself.API.Controllers
 
             var newUser = new User(name, email, password);
        
-            _dbContext.Users.Add(newUser);
-            _dbContext.SaveChanges();
+            await _dbContext.Users.AddAsync(newUser);
+            await _dbContext.SaveChangesAsync();
 
             return Ok("Пользователь успешно зарегистрирован!");
         }
@@ -35,7 +36,7 @@ namespace DoYourself.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromForm] string email, [FromForm] string password)
         {
-            var user = _dbContext.Users.FirstOrDefault(u => u.Email == email);           
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);           
             if (user == null || user.Password != Core.DAL.Models.User.HashPassword(password))
             {
                 return BadRequest("Неверный логин или пароль");

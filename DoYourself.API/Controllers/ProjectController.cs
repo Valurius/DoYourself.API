@@ -97,7 +97,7 @@ namespace DoYourself.API.Controllers
             }
 
             _dbContext.Projects.Remove(project);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             return Ok($"Проект с ID {id} был удален.");
         }

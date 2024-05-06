@@ -21,7 +21,7 @@ namespace DoYourself.API.Controllers
         [HttpGet()]
         public async Task<IActionResult> GetTeams()
         {
-            var teams = _dbContext.Teams.ToList();
+            var teams = await _dbContext.Teams.ToListAsync();
             if (teams == null || !teams.Any())
             {
                 return NotFound("Команды не найдены.");
@@ -33,7 +33,7 @@ namespace DoYourself.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTeamById(Guid id)
         {
-            var team = _dbContext.Teams.Find(id);
+            var team = await _dbContext.Teams.FindAsync(id);
             if (team == null)
             {
                 return NotFound($"Команда с ID {id} не найдена.");
@@ -43,25 +43,29 @@ namespace DoYourself.API.Controllers
 
         // POST: api/Team
         [HttpPost]
-        public async Task<IActionResult> CreateTeam([FromBody] Team teamModel)
+        public async Task<IActionResult> CreateTeam([FromBody] Team teamModel, Guid userId )
         {
             if (teamModel.Title == null)
             {
                 return BadRequest("Данные предоставлены некорректно");
             }
 
-            // Проверка на уникальность имени команды
-            var existingTeam = _dbContext.Teams.FirstOrDefault(t => t.Title == teamModel.Title);
+            var existingTeam = await _dbContext.Teams.FirstOrDefaultAsync(t => t.Title == teamModel.Title); 
+            
             if (existingTeam != null)
             {
                 return Conflict($"Команда с именем {teamModel.Title} уже существует.");
             }
-            var newTeam = new Team(teamModel.Title);
-            // Добавление команды в базу данных
-            _dbContext.Teams.Add(newTeam);
-            _dbContext.SaveChanges();
 
-            // Возвращение созданной команды с статусом 201 (Created)
+            var role = await _dbContext.Roles.FirstAsync(x => x.Name == "Владелец");
+
+            var newTeam = new Team(teamModel.Title);
+            var newTeamUser = new TeamUser(newTeam.Id, userId, role.Id);
+            
+            await _dbContext.Teams.AddAsync(newTeam);
+            await _dbContext.TeamUsers.AddAsync(newTeamUser);
+            await _dbContext.SaveChangesAsync();
+            
             return Ok(new { id = newTeam.Id });
         }
 
@@ -69,7 +73,7 @@ namespace DoYourself.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTeam(Guid id, [FromBody] Team teamModel)
         {
-            var teamToUpdate = _dbContext.Teams.FirstOrDefault(t => t.Id == id);
+            var teamToUpdate = await _dbContext.Teams.FirstOrDefaultAsync(t => t.Id == id);
             if (teamToUpdate == null)
             {
                 return NotFound($"Команда с ID {id} не найдена.");

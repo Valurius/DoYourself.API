@@ -5,21 +5,19 @@ namespace DoYourself.Core.DAL.Models
     public class TeamUser : ITeamUser
     {
         public TeamUser() { }
-        public TeamUser(string teamId, string userId, string roleId, int score, int experience)
+        public TeamUser(Guid teamId, Guid userId, Guid roleId)
         {
             Id = Guid.NewGuid();
-            TeamId = Guid.Parse(teamId);
-            UserId = Guid.Parse(userId);
-            RoleId = Guid.Parse(roleId);
-            Score = score;          
-            Experience = experience;
+            TeamId = teamId;
+            UserId = userId;
+            RoleId = roleId;
         }
 
         public Guid Id { get; set; }
         public Guid TeamId { get; set; }
         public Guid UserId { get; set; }
         public Guid RoleId { get; set; }
-        public int Score { get; }
-        public int Experience { get; }
+        public int? Score { get; }
+        public int? Experience { get; }
     }
 }
