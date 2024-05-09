@@ -7,7 +7,7 @@ namespace DoYourself.API.Auth
 {
     public static class GenerateToken
     {
-        private const string _key = "mysupersecret_secretsecretsecretkey!123";
+        private const string _key = AuthOptions.KEY;
         public static string GenerateTokens(string username)
         {
 

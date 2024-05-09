@@ -18,14 +18,14 @@ namespace DoYourself.API.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> RegisterUser([FromForm] string name, [FromForm] string email, [FromForm] string password)
+        public async Task<IActionResult> RegisterUser([FromForm] string phone, [FromForm] string email, [FromForm] string password)
         {
-            if (name == null || email == null || password == null)
+            if (phone == null || email == null || password == null)
             {
                 return BadRequest("Неверные данные пользователя.");
             }
 
-            var newUser = new User(name, email, password);
+            var newUser = new User(phone, email, password);
        
             await _dbContext.Users.AddAsync(newUser);
             await _dbContext.SaveChangesAsync();

@@ -27,5 +27,24 @@ namespace DoYourself.API.Controllers
 
             return Ok(user);
         }
+
+        [HttpGet("byPhone/{phone}")]
+        public async Task<IActionResult> GetUser(string phone, string chatId)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Phone == phone);
+            if (user == null)
+            {
+                return NotFound("Пользователь не найден");
+            }
+            if (user.ChatId == null)
+            {
+                user.ChatId = chatId;
+                _dbContext.Entry(user).State = EntityState.Modified;
+                await _dbContext.SaveChangesAsync();
+                return Ok("Зарегал");
+            }
+            return Ok("Зареган");
+            
+        }
     }
 }

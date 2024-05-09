@@ -1,6 +1,9 @@
 ﻿using DoYourself.Core.DAL.Abstractions;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace DoYourself.Core.DAL.Models
 {
@@ -8,27 +11,27 @@ namespace DoYourself.Core.DAL.Models
     {
         public User() { }
 
-        public User(string name, string email, string password) 
+        public User(string phone, string email, string password) 
         { 
             Id = Guid.NewGuid();
-            Name = name;
+            Phone = phone;
             Email = email;
-            Permition = "Юзер";
+            Permission = "Юзер";
             Password = HashPassword(password);
         }
         public User(string email, string password)
         {
             Id = Guid.NewGuid();
             Email = email;
-            Permition = "Админ";
+            Permission = "Админ";
             Password = HashPassword(password);
         }
         public Guid Id { get; set; }
         public string? Name { get; set;}
         public string? Surname { get; set;}
-        public string? Nickname { get; set;}
-        public string Permition { get; set;}
-        public DateOnly? BirthDate { get; set;}
+        public string? Phone { get; set;}
+        public string Permission { get; set;}
+        public string? ChatId { get; set;}
         public string? Picture { get; set;}
         public int? Points { get; set;}
         public int? Experience { get; set;}
@@ -44,6 +47,8 @@ namespace DoYourself.Core.DAL.Models
                 return BitConverter.ToString(passwordBytes).Replace("-", "").ToLower();
             }
         }
+
+
     }
 }
     
