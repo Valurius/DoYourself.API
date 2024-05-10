@@ -35,7 +35,7 @@ namespace DoYourself.API.Controllers
             }
             return Ok(tasks);
         }
-
+        // отправить сюда chatId
         [HttpPost]
         public async Task<IActionResult> CreateTask([FromBody] Core.DAL.Models.Task taskModel)
         {
@@ -44,10 +44,31 @@ namespace DoYourself.API.Controllers
                 return BadRequest("Данные предоставлены некорректно");
             }
 
-            var newTask = new Core.DAL.Models.Task(taskModel.ProjectId, taskModel.Title, taskModel.Description, taskModel.Priority, taskModel.IsTemporary, taskModel.Deadline);
-            // Добавление команды в базу данных
+            var newTask = new Core.DAL.Models.Task(taskModel.ProjectId, taskModel.UserId, taskModel.Title, taskModel.Description, taskModel.Priority, taskModel.IsTemporary, taskModel.Deadline);
+                    
+
             await _dbContext.Tasks.AddAsync(newTask);
             await _dbContext.SaveChangesAsync();
+            // проверить создалась ли задача
+            
+            var token = "7194534654:AAFdYI7bIgouUXiYnqpN9z6m-sfopJNGZ8c";
+            var chatId = 707088139;
+            var message = "ТЕСТ";
+
+            using (var client = new HttpClient())
+            {
+                var url = $"https://api.telegram.org/bot{token}/sendMessage";
+                var payload = new
+                {
+                    chat_id = chatId,
+                    text = message
+                };
+
+                var response = await client.PostAsJsonAsync(url, payload);
+                var result = await response.Content.ReadAsStringAsync();
+
+                Console.WriteLine(result);
+            }
 
             // Возвращение созданной команды с статусом 201 (Created)
             return Ok();

@@ -40,7 +40,7 @@ namespace DoYourself.Core.DAL
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectStatistic> ProjectStatistics { get; set; }
-        public DbSet<ProjectTask> ProjectTasks { get; set; }
+        public DbSet<ProjectUser> ProjectUsers { get; set; }
         public DbSet<Purchase> Purchases { get; set; }
     }
 }

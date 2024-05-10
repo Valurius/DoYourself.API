@@ -23,6 +23,7 @@ namespace DoYourself.Core.DAL.Models
         {
             Id = Guid.NewGuid();
             Email = email;
+            Name = "Админ";
             Permission = "Админ";
             Password = HashPassword(password);
         }

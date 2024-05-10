@@ -2,17 +2,17 @@
 
 namespace DoYourself.Core.DAL.Models
 {
-    public class ProjectTask: IProjectTask
+    public class ProjectUser: IProjectUser
     {
-        public ProjectTask() { }
-        public ProjectTask(string tagId, string taskId, string projectId)
+        public ProjectUser() { }
+        public ProjectUser(string userId, string projectId)
         {
             Id = Guid.NewGuid();         
-            TaskId = Guid.Parse(taskId);
+            UserId = Guid.Parse(userId);
             ProjectId = Guid.Parse(projectId);
         }
         public Guid Id { get; set; }
-        public Guid TaskId { get; set; }
+        public Guid UserId { get; set; }
         public Guid ProjectId { get; set; }
     }
 }

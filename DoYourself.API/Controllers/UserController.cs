@@ -1,7 +1,9 @@
 ﻿using DoYourself.Core.DAL;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace DoYourself.API.Controllers
 {
@@ -14,6 +16,17 @@ namespace DoYourself.API.Controllers
         public UserController(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        [HttpGet()]
+        public async Task<IActionResult> GetUsers()
+        {
+            var users = await _dbContext.Users.ToListAsync();
+            if (users == null || !users.Any())
+            {
+                return NotFound("Команды не найдены.");
+            }
+            return Ok(users);
         }
 
         [HttpGet("{userId}")]
@@ -29,22 +42,26 @@ namespace DoYourself.API.Controllers
         }
 
         [HttpGet("byPhone/{phone}")]
-        public async Task<IActionResult> GetUser(string phone, string chatId)
+        public IDictionary<string, string> GetUser(string phone, string chatId)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Phone == phone);
+            var Query = new Dictionary<string, string>();
+            var user =  _dbContext.Users.FirstOrDefault(u => u.Phone == phone);
             if (user == null)
-            {
-                return NotFound("Пользователь не найден");
+            {           
+                Query.Add("status_code", "404");
+                return Query;
             }
             if (user.ChatId == null)
             {
                 user.ChatId = chatId;
                 _dbContext.Entry(user).State = EntityState.Modified;
-                await _dbContext.SaveChangesAsync();
-                return Ok("Зарегал");
+                _dbContext.SaveChanges();
+                Query.Add("status_code", "201");
+                return Query;
             }
-            return Ok("Зареган");
-            
+            Query.Add("status_code", "200");
+            return Query;
+
         }
     }
 }
