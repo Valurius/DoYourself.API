@@ -17,7 +17,7 @@ namespace DoYourself.Core.DAL.Models
         public Guid TeamId { get; set; }
         public Guid UserId { get; set; }
         public Guid RoleId { get; set; }
-        public int? Score { get; }
-        public int? Experience { get; }
+        public int? Score { get; set; }
+        public int? Experience { get; set; }
     }
 }

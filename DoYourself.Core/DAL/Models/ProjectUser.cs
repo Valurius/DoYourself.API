@@ -5,11 +5,11 @@ namespace DoYourself.Core.DAL.Models
     public class ProjectUser: IProjectUser
     {
         public ProjectUser() { }
-        public ProjectUser(string userId, string projectId)
+        public ProjectUser(Guid userId, Guid projectId)
         {
             Id = Guid.NewGuid();         
-            UserId = Guid.Parse(userId);
-            ProjectId = Guid.Parse(projectId);
+            UserId = userId;
+            ProjectId = projectId;
         }
         public Guid Id { get; set; }
         public Guid UserId { get; set; }

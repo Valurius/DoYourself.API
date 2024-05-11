@@ -2,6 +2,8 @@
 using DoYourself.Core.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System.Text;
 using System.Xml.Linq;
 
 namespace DoYourself.API.Controllers
@@ -36,8 +38,8 @@ namespace DoYourself.API.Controllers
             return Ok(tasks);
         }
         // отправить сюда chatId
-        [HttpPost]
-        public async Task<IActionResult> CreateTask([FromBody] Core.DAL.Models.Task taskModel)
+        [HttpPost("{TeamId}")]
+        public async Task<IActionResult> CreateTask([FromBody] Core.DAL.Models.Task taskModel, Guid TeamId)
         {
             if (taskModel == null)
             {
@@ -45,31 +47,53 @@ namespace DoYourself.API.Controllers
             }
 
             var newTask = new Core.DAL.Models.Task(taskModel.ProjectId, taskModel.UserId, taskModel.Title, taskModel.Description, taskModel.Priority, taskModel.IsTemporary, taskModel.Deadline);
-                    
+            
 
             await _dbContext.Tasks.AddAsync(newTask);
-            await _dbContext.SaveChangesAsync();
-            // проверить создалась ли задача
+            await _dbContext.SaveChangesAsync(); 
+            var isTaskCreated = await _dbContext.Tasks.AnyAsync(t => t.Id == newTask.Id);
             
-            var token = "7194534654:AAFdYI7bIgouUXiYnqpN9z6m-sfopJNGZ8c";
-            var chatId = 707088139;
-            var message = "ТЕСТ";
-
-            using (var client = new HttpClient())
+            if (isTaskCreated)
             {
-                var url = $"https://api.telegram.org/bot{token}/sendMessage";
-                var payload = new
+                var taskId = newTask.Id;
+                var projectId = newTask.ProjectId;
+                var token = "7194534654:AAFdYI7bIgouUXiYnqpN9z6m-sfopJNGZ8c";
+                var chatId = 707088139;
+                var link = $"https://master--doyourself.netlify.app/{TeamId}/{projectId}/{taskId}";
+                var message = "Новая задача " + "'" + newTask.Title + "'";
+                
+
+                using (var client = new HttpClient())
                 {
-                    chat_id = chatId,
-                    text = message
-                };
+                    var replyMarkup = new
+                    {
+                        inline_keyboard = new[]
+                        {
+                            new[] // первый ряд кнопок
+                            {
+                                new { text = "Перейти к задаче", url = link }
+                            }
+                        }
+                    };                   
 
-                var response = await client.PostAsJsonAsync(url, payload);
-                var result = await response.Content.ReadAsStringAsync();
+                    var url = $"https://api.telegram.org/bot{token}/sendMessage";
 
-                Console.WriteLine(result);
+                    var payload = new
+                    {
+                        chat_id = chatId,
+                        text = message,
+                        parse_mode = "Markdown",
+                        reply_markup = replyMarkup,
+                    };
+                    
+                    Console.WriteLine(payload);
+                    var serializedPayload = JsonConvert.SerializeObject(payload);
+                    var content = new StringContent(serializedPayload, Encoding.UTF8, "application/json");
+                    var response = await client.PostAsync(url, content);
+                    var result = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine(result);
+                }
             }
-
             // Возвращение созданной команды с статусом 201 (Created)
             return Ok();
         }

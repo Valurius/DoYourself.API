@@ -87,6 +87,8 @@ namespace DoYourself.API.Controllers
             return Ok(projectToUpdate);
         }
 
+
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProject(Guid id)
         {
