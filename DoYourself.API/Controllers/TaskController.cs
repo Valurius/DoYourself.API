@@ -37,7 +37,7 @@ namespace DoYourself.API.Controllers
             }
             return Ok(tasks);
         }
-        // отправить сюда chatId
+        
         [HttpPost("{TeamId}")]
         public async Task<IActionResult> CreateTask([FromBody] Core.DAL.Models.Task taskModel, Guid TeamId)
         {
@@ -86,12 +86,10 @@ namespace DoYourself.API.Controllers
                         reply_markup = replyMarkup,
                     };
                     
-                    Console.WriteLine(payload);
                     var serializedPayload = JsonConvert.SerializeObject(payload);
                     var content = new StringContent(serializedPayload, Encoding.UTF8, "application/json");
                     var response = await client.PostAsync(url, content);
                     var result = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine(result);
                 }
             }
             // Возвращение созданной команды с статусом 201 (Created)

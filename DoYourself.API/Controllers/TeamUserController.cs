@@ -3,6 +3,7 @@ using DoYourself.Core.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.Linq;
 using System.Text;
 
 namespace DoYourself.API.Controllers
@@ -66,6 +67,23 @@ namespace DoYourself.API.Controllers
             }
 
             return Ok(teams);
+        }
+
+        [HttpGet("teamUser/task/{userId}/{teamId}")]
+        public async Task<IActionResult> GetUserTeamTasks(Guid userId, Guid teamId)
+        {
+            // Получаем ID проектов, связанных с командой
+            var projectIds = await _dbContext.Projects
+                                             .Where(p => p.TeamId == teamId)
+                                             .Select(p => p.Id)
+                                             .ToListAsync();
+
+            // Получаем задачи, связанные с этими проектами и пользователем
+            var tasks = await _dbContext.Tasks
+                                        .Where(t => projectIds.Contains((Guid)t.ProjectId) && t.UserId == userId)
+                                        .ToListAsync();
+
+            return Ok(tasks);
         }
 
         [HttpPost("{userId}/{teamId}")]
