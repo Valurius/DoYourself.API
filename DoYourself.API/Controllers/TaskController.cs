@@ -27,6 +27,17 @@ namespace DoYourself.API.Controllers
             return Ok(tasks);
         }
 
+        [HttpGet("getTask/{id}")]
+        public async Task<IActionResult> GetTaskById(Guid id)
+        {
+            var tasks = await _dbContext.Tasks.FindAsync(id);
+            if (tasks == null)
+            {
+                return NotFound($"Задача с ID {id} не найден.");
+            }
+            return Ok(tasks);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTasksByProjectId(Guid id)
         {
@@ -125,6 +136,23 @@ namespace DoYourself.API.Controllers
                     throw;
                 }
             }
+
+            return NoContent();
+        }
+
+        [HttpPut("status/{id}")]
+        public async Task<IActionResult> UpdateTaskStatus(Guid id, string status)
+        {
+            var taskToUpdate = await _dbContext.Tasks.FindAsync(id);
+            if (taskToUpdate == null)
+            {
+                return NotFound();
+            }
+
+            // Обновляем только поле status
+            taskToUpdate.Status = status;
+
+            await _dbContext.SaveChangesAsync();
 
             return NoContent();
         }

@@ -25,19 +25,9 @@ namespace DoYourself.API.Controllers
                                               .Select(tu => tu.UserId)
                                               .ToListAsync();
 
-                if (!userIds.Any())
-                {
-                    return NotFound($"Участники команды с ID {projectId} не найдены.");
-                }
-
                 var users = await _dbContext.Users
                                             .Where(u => userIds.Contains(u.Id))
                                             .ToListAsync();
-
-                if (!users.Any())
-                {
-                    return NotFound($"Пользователи с данными ID не найдены.");
-                }
 
                 return Ok(users);
             }
