@@ -6,11 +6,11 @@ namespace DoYourself.Core.DAL.Models
     public class TaskTag : ITaskTag
     {
         public TaskTag() { }
-        public TaskTag(string tagId, string taskId)
+        public TaskTag(Guid taskId, Guid tagId)
         {
             Id = Guid.NewGuid();
-            TagId = Guid.Parse(tagId);
-            TaskId = Guid.Parse(taskId);
+            TaskId = taskId;
+            TagId = tagId;
         }
 
         public Guid Id { get; set;}

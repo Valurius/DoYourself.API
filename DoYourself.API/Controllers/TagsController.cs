@@ -103,6 +103,32 @@ namespace DoYourself.API.Controllers
 
             return Ok($"Тег с ID {id} был удален.");
         }
+
+        [HttpPost("{taskId}/{tagId}")]
+        public async Task<IActionResult> AddTagForTask(Guid taskId, Guid tagId)
+        {
+            var newTaskTag = new TaskTag(taskId, tagId);
+
+            await _dbContext.TaskTags.AddAsync(newTaskTag);
+            await _dbContext.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpGet("Task/{taskId}")]
+        public async Task<IActionResult> GetTaskTagsByTaskId(Guid taskId)
+        {
+            var tasks = await _dbContext.TaskTags
+                                          .Where(tu => tu.TaskId == taskId)
+                                          .Select(tu => tu.TagId)
+                                          .ToListAsync();
+
+            var tags = await _dbContext.Tags
+                                        .Where(u => tasks.Contains(u.Id))
+                                        .ToListAsync();
+
+            return Ok(tags);
+        }
     }
 }
 

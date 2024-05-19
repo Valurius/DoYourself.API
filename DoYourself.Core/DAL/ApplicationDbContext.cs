@@ -8,6 +8,7 @@ namespace DoYourself.Core.DAL
     {
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
+
             Database.EnsureCreated();
 
             if (Users.Count() == 0)
@@ -36,7 +37,7 @@ namespace DoYourself.Core.DAL
         public DbSet<Team> Teams { get; set; }
         public DbSet<TeamTask> TeamTasks { get; set; }
         public DbSet<TeamUser> TeamUsers { get; set; }
-        public DbSet<Award> Awards{ get; set; }
+        public DbSet<Award> Awards { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectStatistic> ProjectStatistics { get; set; }

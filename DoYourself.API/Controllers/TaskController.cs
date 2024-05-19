@@ -38,6 +38,21 @@ namespace DoYourself.API.Controllers
             return Ok(tasks);
         }
 
+        [HttpGet("TeamTasks/{teamId}")]
+        public async Task<IActionResult> GetTasks(Guid teamId)
+        {
+            var projectIds = await _dbContext.Projects
+                                             .Where(p => p.TeamId == teamId)
+                                             .Select(p => p.Id)
+                                             .ToListAsync();
+
+            var tasks = await _dbContext.Tasks
+                                        .Where(t => t.ProjectId.HasValue && projectIds.Contains(t.ProjectId.Value))
+                                        .ToListAsync();
+
+            return Ok(tasks);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTasksByProjectId(Guid id)
         {
@@ -102,9 +117,10 @@ namespace DoYourself.API.Controllers
                     var response = await client.PostAsync(url, content);
                     var result = await response.Content.ReadAsStringAsync();
                 }
+                return Ok(new { taskId = newTask.Id });
             }
             // Возвращение созданной команды с статусом 201 (Created)
-            return Ok();
+            return Ok(new { taskId = newTask.Id });
         }
 
         [HttpPut("{id}")]

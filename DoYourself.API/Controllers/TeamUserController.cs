@@ -44,6 +44,14 @@ namespace DoYourself.API.Controllers
             return Ok(users);
         }
 
+        [HttpGet("TeamMember/{teamId}/{userId}")]
+        public async Task<IActionResult> GetTeamMembersProfileByTeamId(Guid teamId, Guid userId)
+        {
+            var teamUser = await _dbContext.TeamUsers.FirstOrDefaultAsync(tu => tu.TeamId == teamId && tu.UserId == userId);
+
+            return Ok(teamUser);
+        }
+
         [HttpGet("teamUser/{userId}")]
         public async Task<IActionResult> GetTeamsByUserId(Guid userId)
         {
@@ -132,6 +140,28 @@ namespace DoYourself.API.Controllers
 
 
             return Ok();
+        }
+
+        [HttpPut("{teamId}/{userId}")]
+        public async Task<IActionResult> UpdateUserScoreInTeam(Guid teamId, Guid userId, [FromBody] int points)
+        {
+            // Находим запись пользователя в команде по teamId и userId
+            var teamUser = await _dbContext.TeamUsers.FirstOrDefaultAsync(tu => tu.TeamId == teamId && tu.UserId == userId);
+            if (teamUser == null)
+            {
+                return NotFound("Запись пользователя в команде не найдена");
+            }
+
+            if(teamUser.Score == null)
+            {
+                teamUser.Score = 0;
+            }
+            teamUser.Score = teamUser.Score + points;
+
+            _dbContext.TeamUsers.Update(teamUser);
+            await _dbContext.SaveChangesAsync();
+
+            return Ok("Счет пользователя в команде успешно обновлен");
         }
     }
 }
